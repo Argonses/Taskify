@@ -1,0 +1,37 @@
+﻿@page "/tasklist"
+@inject ITaskService TaskService
+
+<h3>TaskList</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Status</th>
+            <th>Added Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in TaskService.Tasks)
+        {
+            <tr>
+                <td>@task.Id</td>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.Category</td>
+                <td>@task.Status</td>
+                <td>@task.AddedTime.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        await TaskService.GetAllTasks();
+    }
+}
