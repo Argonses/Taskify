@@ -2,6 +2,8 @@
 @inject ITaskService TaskService
 
 <h3>TaskList</h3>
+<hr />
+<button class="btn btn-info">Add Task</button>
 
 <table class="table">
     <thead>
@@ -24,6 +26,11 @@
                 <td>@task.Category</td>
                 <td>@task.Status</td>
                 <td>@task.AddedTime.ToShortDateString()</td>
+                <td>
+                    <a href="/detailsPage/@task.Id" class="btn btn-primary">Details</a>
+                    <a class="btn" style="background-color:limegreen">Edit</a>
+                    <a class="btn btn-danger">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

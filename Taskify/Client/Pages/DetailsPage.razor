@@ -1,0 +1,49 @@
+﻿@page "/detailsPage/{id:int}"
+@inject ITaskService TaskService
+
+<div class="container mt-5">
+    <h3 class="text-center">Details Page</h3>
+
+    <div class="card mx-auto" style="width: 18rem;">
+        <div class="card-body">
+            @if (TaskService.Tasks.Any())
+            {
+                var task = TaskService.Tasks.FirstOrDefault(t => t.Id == Id);
+                if (task != null)
+                {
+                    <h5 class="card-title text-center">Task Details</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>ID:</strong> @task.Id</li>
+                        <li class="list-group-item"><strong>Title:</strong> @task.Title</li>
+                        <li class="list-group-item"><strong>Description:</strong> @task.Description</li>
+                        <li class="list-group-item"><strong>Category:</strong> @task.Category</li>
+                        <li class="list-group-item"><strong>Status:</strong> @task.Status</li>
+                        <li class="list-group-item"><strong>Added Time:</strong> @task.AddedTime.ToShortDateString()</li>
+                    </ul>
+                }
+                else
+                {
+                    <div class="alert alert-warning text-center" role="alert">
+                        Task not found.
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-warning text-center" role="alert">
+                    No tasks available.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        await TaskService.GetTaskById(Id);
+    }
+}
