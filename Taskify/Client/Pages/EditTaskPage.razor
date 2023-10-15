@@ -1,0 +1,62 @@
+﻿@page "/editTaskPage/{id:int}"
+@inject ITaskService TaskService
+@inject NavigationManager NavigationManager
+
+<h3>Edit Task Page</h3>
+
+<div class="container mt-5">
+    <form @onsubmit="EditTask">
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" @bind="editedTask.Title" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" rows="3" @bind="editedTask.Description"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <select class="form-control" id="category" @bind="editedTask.Category" required>
+                @foreach (TaskCategory category in Enum.GetValues(typeof(TaskCategory)))
+                {
+                    <option value="@category">@category.ToString()</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select class="form-control" id="status" @bind="editedTask.Status" required>
+                @foreach (Taskify.Shared.TaskStatus status in Enum.GetValues(typeof(Taskify.Shared.TaskStatus)))
+                {
+                    <option value="@status">@status.ToString()</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
+
+@code {
+    private Taskify.Shared.Task editedTask = new Taskify.Shared.Task();
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        await LoadTask();
+    }
+
+    private async System.Threading.Tasks.Task LoadTask()
+    {
+        editedTask = await TaskService.GetTaskById(Id);
+    }
+
+    private async System.Threading.Tasks.Task EditTask()
+    {
+        await TaskService.UpdateTask(editedTask.Id, editedTask);
+
+        NavigationManager.NavigateTo($"/detailsPage/{editedTask.Id}");
+    }
+}
+

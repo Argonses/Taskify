@@ -28,7 +28,7 @@
                 <td>@task.AddedTime.ToShortDateString()</td>
                 <td>
                     <a href="/detailsPage/@task.Id" class="btn btn-primary">Details</a>
-                    <a class="btn" style="background-color:limegreen">Edit</a>
+                    <a href="/editTaskPage/@task.Id" class="btn" style="background-color:limegreen">Edit</a>
                     <a class="btn btn-danger" @onclick="() => DeleteTask(task.Id)">Delete</a>
                 </td>
             </tr>
