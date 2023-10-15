@@ -1,5 +1,71 @@
 ﻿@page "/"
+@using MudBlazor;
+
+@inject ITaskService taskService
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, Welcome to Taskify Dashboard!</h1>
+<h1 style="text-align:center">Welcome to Taskify Dashboard!</h1>
+
+<MudGrid>
+    <MudItem xs="12" sm="6">
+        <MudCard>
+            <MudCardContent>
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@CategorySeries" XAxisLabels="@CategoryLabels" Width="100%" Height="350px"></MudChart>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem xs="12" sm="6">
+        <MudCard>
+            <MudCardContent>
+                <MudChart ChartType="ChartType.Bar" ChartSeries="@StatusSeries" XAxisLabels="@StatusLabels" Width="100%" Height="350px"></MudChart>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private List<ChartSeries> CategorySeries = new List<ChartSeries>();
+    private List<ChartSeries> StatusSeries = new List<ChartSeries>();
+    private string[] CategoryLabels = Enum.GetNames(typeof(TaskCategory));
+    private string[] StatusLabels = Enum.GetNames(typeof(Taskify.Shared.TaskStatus));
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        var tasks = await taskService.GetAllTasks();
+        CategorySeries = GetCategorySeries(tasks);
+        StatusSeries = GetStatusSeries(tasks);
+    }
+
+    private List<ChartSeries> GetCategorySeries(List<Taskify.Shared.Task> tasks)
+    {
+        var series = new List<ChartSeries>();
+        var data = new double[CategoryLabels.Length];
+        foreach (var task in tasks)
+        {
+            data[(int)task.Category]++;
+        }
+        series.Add(new ChartSeries()
+        {
+            Name = "Tasks",
+            Data = data
+        });
+        return series;
+    }
+
+    private List<ChartSeries> GetStatusSeries(List<Taskify.Shared.Task> tasks)
+    {
+        var series = new List<ChartSeries>();
+        var data = new double[StatusLabels.Length];
+        foreach (var task in tasks)
+        {
+            data[(int)task.Status]++;
+        }
+        series.Add(new ChartSeries()
+        {
+            Name = "Tasks",
+            Data = data
+        });
+        return series;
+    }
+}

@@ -35,9 +35,10 @@ namespace Taskify.Client.Services
             return deletedTask;
         }
 
-        public async Task GetAllTasks()
+        public async Task<List<Taskify.Shared.Task>> GetAllTasks()
         {
             Tasks = await _http.GetFromJsonAsync<List<Taskify.Shared.Task>>("api/Tasks");
+            return Tasks;
         }
 
         public async Task<Taskify.Shared.Task> GetTaskById(int id)
